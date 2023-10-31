@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer with Sound</title>
+    <link rel="stylesheet" href="photo.css">
+
+</head>
+
+<body>
+    <div class="timer">
+        <div id="display">00:00</div>
+        <button id="startButton" onclick="startTimer()">Start</button>
+        <button id="stopButton" onclick="stopTimer()">Stop</button>
+        <button id="resetButton" onclick="resetTimer()">Reset</button>
+    </div>
+
+    <audio id="alertSound" src="sound"></audio>
+
+    <script>
+        let timer;
+        let timeRemaining = 0;
+        let isRunning = false;
+
+        function startTimer() {
+            if (!isRunning) {
+                const inputMinutes = parseInt(prompt("Enter the countdown time in minutes:"));
+                if (!isNaN(inputMinutes) && inputMinutes > 0) {
+                    timeRemaining = inputMinutes * 60; // Convert minutes to seconds
+                    isRunning = true;
+                    updateDisplay();
+                    timer = setInterval(decrementTime, 1000);
+                    document.getElementById("startButton").innerText = "Resume";
+                }
+            }
+        }
+
+        function decrementTime() {
+            if (timeRemaining > 0) {
+                timeRemaining--;
+                updateDisplay();
+            } else {
+                stopTimer();
+                alert("Time's up!");
+                playAlertSound();
+            }
+        }
+
+        function updateDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            const displayText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            document.getElementById("display").innerText = displayText;
+        }
+
+        function stopTimer() {
+            if (isRunning) {
+                clearInterval(timer);
+                isRunning = false;
+                document.getElementById("startButton").innerText = "Resume";
+            }
+        }
+
+        function resetTimer() {
+            stopTimer();
+            timeRemaining = 0;
+            updateDisplay();
+        }
+
+        function playAlertSound() {
+            const sound = document.getElementById("alertSound");
+            sound.play();
+        }
+    </script>
+</body>
+
+</html>
